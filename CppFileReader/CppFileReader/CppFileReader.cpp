@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -16,26 +17,31 @@ class MyFileProcessor
         {
             this->filePath = filePath;
             cout << "filepath: " << this->filePath << endl;
-            //printf("filepath: %s \n", this->filePath); -- does not work as intended
         }
 
         // Member Functions() 
-        void openFile()
+        void writeToFile(string text)
         {
-            ofstream myFile;
-            try {
-                myFile.open(filePath);
-                cout << "Success!! Opened file: " << filePath << endl;
+            ofstream myFileStream;
+            myFileStream.open(filePath, ios_base::app);
+
+            if (myFileStream.is_open())
+            {
+                myFileStream << text;
+                myFileStream.close();
             }
-            catch (ifstream::failure & e) {
-                cout << "Failed to open file: " << filePath << endl;
+            else {
+                cout << filePath << " is not opened." << endl;
             }
         }
 };
 
 int main()
 {
-    MyFileProcessor testFileReader = MyFileProcessor("/resources/test.dat");
-    testFileReader.openFile();
+    MyFileProcessor testFileReader = MyFileProcessor("test.dat");
+    for (int i = 0; i < 3; i++) {
+        string text = to_string(i) + "\n";
+        testFileReader.writeToFile(text);
+    }
 }
 
